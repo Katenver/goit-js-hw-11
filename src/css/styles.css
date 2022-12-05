@@ -83,3 +83,7 @@ a {
 img {
   margin-top: 50px;
 }
+
+.is-hidden {
+  opacity: 0;
+}

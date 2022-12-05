@@ -10,7 +10,7 @@ const galleryEl = document.querySelector('.gallery');
 const loadBtn = document.querySelector('.load-more');
 
 let pageCounter = 1;
-let currentHits = 0;
+// let imagesShown = 0;
 
 // const options = {
 //   root: document.querySelector('body'),
@@ -30,7 +30,7 @@ async function fetchImages(searchQuery) {
         orientation: 'horizontal',
         safesearch: 'true',
         page: `${pageCounter}`,
-        per_page: '10',
+        per_page: '40',
       },
     }));
   } catch (error) {
@@ -59,12 +59,22 @@ function onSearch(evt) {
           throw new Error();
         } else {
           Notify.success(`Hooray! We found ${totalHits} images.`);
+          
           return hits;
         }
       }
     )
     .then(hits => {
-      createMarkup(hits);
+        console.dir(hits)
+       if(hits.length < 40){
+       
+        createMarkup(hits);
+        return Notify.info('We`re sorry, but you`ve reached the end of search results')
+       } else {
+        createMarkup(hits);
+        loadBtn.classList.remove('is-hidden');
+       }
+      
     })
     .catch(error => {
       console.dir(error.message);
@@ -129,7 +139,6 @@ function onLoad() {
           throw new Error();
         } else {
           pageCounter += 1;
-          Notify.success(`Hooray! We found ${totalHits} images.`);
           return hits;
         }
       }
