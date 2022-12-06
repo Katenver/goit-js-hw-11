@@ -8,8 +8,42 @@ const KEY_API = '31754273-9e9d247053aea74207f174a45';
 const searchFormEl = document.querySelector('#search-form');
 const galleryEl = document.querySelector('.gallery');
 const loadBtn = document.querySelector('.load-more');
+const guard = document.querySelector('.js-guard');
+let pageCounter = 0;
 
-let pageCounter = 1;
+const options = {
+  root: null,
+  rootMargin: '200px',
+  treshhold: 1.0,
+};
+const observer = new IntersectionObserver(infinityLoad, options);
+
+function infinityLoad(entries, observer) {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      pageCounter += 1;
+      let query = searchFormEl.elements.searchQuery.value.trim();
+
+      fetchImages(query, pageCounter).then(({ data: { hits } }) => {
+        createMarkup(hits);
+        simpleGallery.refresh();
+
+        const { height: cardHeight } =
+          galleryEl.firstElementChild.getBoundingClientRect();
+
+        window.scrollBy({
+          top: cardHeight * 3,
+          behavior: 'smooth',
+        });
+      }).catch(error => {
+          Notify.warning(
+            "We're sorry, but you've reached the end of search results."
+          );
+          loadBtn.classList.add('is-hidden');
+        });;
+    }
+  });
+}
 
 searchFormEl.addEventListener('submit', onSearch);
 loadBtn.addEventListener('click', onLoad);
@@ -29,7 +63,7 @@ async function fetchImages(searchQuery, pageNumber) {
     });
     return resp;
   } catch (error) {
-    console.dir(error.message);;
+    console.dir(error.message);
   }
 }
 
@@ -60,16 +94,17 @@ function onSearch(evt) {
       }
     )
     .then(hits => {
-        console.dir(hits)
-       if(hits.length < 40){
+      console.dir(hits);
+      if (hits.length < 40) {
         createMarkup(hits);
-        return Notify.info('We`re sorry, but you`ve reached the end of search results')
-       } 
-       else {
+        return Notify.warning(
+          'We`re sorry, but you`ve reached the end of search results'
+        );
+      } else {
         createMarkup(hits);
         loadBtn.classList.remove('is-hidden');
-       }
-      
+        observer.observe(guard);
+      }
     })
     .catch(error => {
       console.dir(error.message);
@@ -116,7 +151,6 @@ function createMarkup(hits) {
   return;
 }
 
-
 function onLoad() {
   pageCounter += 1;
   fetchImages(searchFormEl.elements.searchQuery.value.trim())
@@ -136,18 +170,17 @@ function onLoad() {
       }
     )
     .then(hits => {
-        console.dir(hits)
-       if(hits.length < 40){
-       
+      console.dir(hits);
+      if (hits.length < 40) {
         createMarkup(hits);
         loadBtn.classList.add('is-hidden');
-        return Notify.info('We`re sorry, but you`ve reached the end of search results')
-       
-       } else {
+        return Notify.info(
+          'We`re sorry, but you`ve reached the end of search results'
+        );
+      } else {
         createMarkup(hits);
         loadBtn.classList.remove('is-hidden');
-       }
-      
+      }
     })
     .catch(error => {
       Notify.failure(
