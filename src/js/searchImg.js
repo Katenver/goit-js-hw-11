@@ -10,13 +10,7 @@ const galleryEl = document.querySelector('.gallery');
 const loadBtn = document.querySelector('.load-more');
 
 let pageCounter = 1;
-// let imagesShown = 0;
 
-// const options = {
-//   root: document.querySelector('body'),
-//   rootMargin: '250px',
-//   threshold: 1.0,
-// };
 searchFormEl.addEventListener('submit', onSearch);
 loadBtn.addEventListener('click', onLoad);
 
@@ -35,7 +29,7 @@ async function fetchImages(searchQuery, pageNumber) {
     });
     return resp;
   } catch (error) {
-    console.log(error);
+    console.dir(error.message);;
   }
 }
 
@@ -68,10 +62,10 @@ function onSearch(evt) {
     .then(hits => {
         console.dir(hits)
        if(hits.length < 40){
-       
         createMarkup(hits);
         return Notify.info('We`re sorry, but you`ve reached the end of search results')
-       } else {
+       } 
+       else {
         createMarkup(hits);
         loadBtn.classList.remove('is-hidden');
        }
