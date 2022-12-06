@@ -120,10 +120,7 @@ function createMarkup(hits) {
   simpleGallery.refresh();
   return;
 }
-let simpleGallery = new SimpleLightbox('.gallery a', {
-  captionsData: 'alt',
-  captionDelay: 250,
-});
+
 
 function onLoad() {
   pageCounter += 1;
