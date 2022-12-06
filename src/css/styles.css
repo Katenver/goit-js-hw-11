@@ -45,19 +45,29 @@ a {
 .gallery {
   display: flex;
   flex-wrap: wrap;
-
+ align-items: center;
+ justify-content: center;
   gap: 10px;
 }
 
 .gallery__item {
   margin-bottom: 10px;
   width: 300px;
-
+  flex-basis: calc((100% - 10px * 3) / 6);
   box-shadow: 0px 3px 8px 0px rgba(0, 0, 0, 0.5);
   border-radius: 5px;
   overflow: hidden;
 
   text-decoration: none;
+}
+.photo-card {
+    background-color: #efefef;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+.load-btn{
+  display: flex;
+justify-content: center;
+align-items: center;
 }
 
 .load-more {
@@ -65,7 +75,8 @@ a {
   height: 60px;
 
   font-size: 16px;
-
+  display: inline-block;
+  
   border: none;
   border-top-right-radius: 5px;
   border-bottom-right-radius: 5px;
