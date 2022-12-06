@@ -22,7 +22,7 @@ loadBtn.addEventListener('click', onLoad);
 
 async function fetchImages(searchQuery) {
   try {
-    return (resp = await axios.get(BASE_URL, {
+    return  await axios.get(BASE_URL, {
       params: {
         key: `${KEY_API}`,
         q: `${searchQuery}`,
@@ -32,7 +32,7 @@ async function fetchImages(searchQuery) {
         page: `${pageCounter}`,
         per_page: '40',
       },
-    }));
+    });
   } catch (error) {
     console.log(error);
   }
