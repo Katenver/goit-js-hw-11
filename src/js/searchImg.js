@@ -20,7 +20,7 @@ let pageCounter = 1;
 searchFormEl.addEventListener('submit', onSearch);
 loadBtn.addEventListener('click', onLoad);
 
-async function fetchImages(searchQuery) {
+async function fetchImages(searchQuery, pageNumber) {
   try {
     const resp = await axios.get(BASE_URL, {
       params: {
@@ -42,13 +42,14 @@ async function fetchImages(searchQuery) {
 function onSearch(evt) {
   evt.preventDefault();
   galleryEl.innerHTML = '';
+  pageCounter = 1;
   let query = searchFormEl.elements.searchQuery.value.trim();
 
   if (!query) {
     return Notify.info('Please enter your request.');
   }
 
-  fetchImages(query)
+  fetchImages(query, pageCounter)
     .then(
       ({
         data: { totalHits, hits, total },
@@ -60,7 +61,6 @@ function onSearch(evt) {
           throw new Error();
         } else {
           Notify.success(`Hooray! We found ${totalHits} images.`);
-          
           return hits;
         }
       }
